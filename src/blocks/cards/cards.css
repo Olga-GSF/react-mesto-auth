@@ -1,0 +1,6 @@
+.cards {
+  max-width: 880px;
+  min-height: 744px;
+  display: flex;
+  justify-content: center;
+}

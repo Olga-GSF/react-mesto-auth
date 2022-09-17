@@ -1,0 +1,15 @@
+.card__button-like {
+  width: 22px;
+  height: 19px;
+  background-image: url(../../../img/VectorHeart.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
+  border: none;
+  background-size: contain;
+  transition: opacity 0.1s ease-out;
+}
+
+.card__button-like:hover {
+  opacity: 0.5;
+}

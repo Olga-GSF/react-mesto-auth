@@ -1,0 +1,12 @@
+.card__title-wrap {
+  max-width: 246px;
+  min-height: 23px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: 25px auto 31px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

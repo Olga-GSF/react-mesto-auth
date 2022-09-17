@@ -1,0 +1,41 @@
+.profile__overlay {
+  /*display: none;*/
+  /*transition: opacity 0.1s ease-out;*/
+  /*background-color: #C4C4C4;*/
+  background-image: url(../../../img/VectorPen.svg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 120px;
+  height: 120px;
+  border: none;
+  border-radius: 100%;
+  position: absolute;
+  opacity: 0;
+}
+
+.profile__overlay:hover {
+  opacity: 0.75;
+  background-color: black;
+  background-size: 26px 26px;
+  cursor: pointer;
+}
+
+/*@media screen and (max-width: 1073px) {
+  .profile__overlay {
+      top: 0;
+      left: 81px;
+  }
+}*/
+
+/*@media screen and (max-width: 639px) {
+  .profile__overlay {
+    margin-right: 15px;
+  }
+}
+
+@media screen and (max-width: 424px) {
+  .profile__overlay {
+    margin: 0 0 22.25px;
+  }
+}*/

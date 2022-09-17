@@ -1,0 +1,7 @@
+.button_is-active {
+  background-image: url(../../../img/UnionHeartLike.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 22px;
+  height: 19px;
+}
