@@ -5,12 +5,19 @@ import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
 import { useState, useEffect } from 'react';
 import api from '../utils/api';
+import Login from './Login.js';
+import Register from './Register';
+import ProtectedRoute from './ProtectedRoute';
+import InfoTooltip from './InfoTooltip';
 
 import EditProfilePopup from './EditProfilePopup';
 import RenewAvatarPopup from './RenewAvatarPopup';
 import AddCardPopup from './AddCardPopup';
-import { CurrentUserContext } from '../contexts/CurrentUserContext';
+import PopupWithBurger from './PopupWithBurger';
 
+import { CurrentUserContext } from '../contexts/CurrentUserContext';
+import { Switch, Route, useHistory } from 'react-router-dom';
+import * as auth from '../utils/auth';
 
 function App() {
 
@@ -20,9 +27,15 @@ function App() {
   const [selectedCard, setSelectedCard] = useState({});
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [email, setEmail] = useState('');
+  const history = useHistory();
+  const [isInfoTooltipOpen, setInfoTooltipOpen] = useState(false);
+  const [status, setStatus] = useState(false);
+  const [isMenuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    Promise.all([
+    loggedIn && Promise.all([
       api.getUserData(),
 
       api.getInitialCards(),
@@ -35,7 +48,22 @@ function App() {
       .catch((err) => {
         console.log(err);
       })
-  }, [])
+  }, [loggedIn])
+
+  useEffect(() => {
+    const jwt = localStorage.getItem('token');
+    if (jwt) {
+      auth.checkToken(jwt)
+        .then((res) => {
+          setEmail(res.data.email);
+          setLoggedIn(true);
+          history.push('/');
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+    }
+  }, [history])
 
   function handleEditAvatarClick() {
     renewAvatarPopupOpen(true)
@@ -58,6 +86,11 @@ function App() {
     editProfilePopupOpen(false)
     addCardPopupOpen(false)
     setSelectedCard({})
+    setInfoTooltipOpen(false)
+  }
+
+  function handleMenuClick() {
+    setMenuOpen(!isMenuOpen)
   }
 
   function handleCardLike(cards) {
@@ -118,17 +151,74 @@ function App() {
         console.log(err);
       })
   }
+  function handleRegistration(email, password) {
+    console.log(email)
+    auth.register(email, password)
+      .then((data) => {
+        if (data) {
+          setStatus(true)
+          setInfoTooltipOpen(true)
+          history.push('/sign-in');
+        }
+      })
+      .catch((err) => {
+        setStatus(false)
+        setInfoTooltipOpen(true)
+        console.log(err);
+      })
+  }
 
+  function handleLogin(email, password) {
+    auth.login(email, password)
+      .then((data) => {
+        if (data.token) {
+          localStorage.setItem('token', data.token)
+          setEmail(email);
+          setLoggedIn(true);
+          history.push('/');
+        }
+      })
+      .catch((err) => {
+        setInfoTooltipOpen(true);
+        console.log(err);
+      })
+  }
+
+  function handleLogOut() {
+    localStorage.removeItem('token');
+    setLoggedIn(false);
+    history.push('/sign-in');
+    setMenuOpen(!isMenuOpen)
+  }
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="App">
 
+        <PopupWithBurger isOpen={isMenuOpen} onClose={closeAllPopups} onLogOut={handleLogOut} email={email} />
+
         <div className="page center">
 
-          <Header />
+          <Header onLogOut={handleLogOut} email={email} loggedIn={loggedIn} onBurger={handleMenuClick} />
 
-          <Main onRenewAvatar={handleEditAvatarClick} onEditProfile={handleEditProfileClick} onAddCard={handleAddPlaceClick} onCardClick={handleCardClick} handleCardLike={handleCardLike} handleDeleteCard={handleDeleteCard} cards={cards} />
+          <Switch>
+            <ProtectedRoute exact path="/"
+              onRenewAvatar={handleEditAvatarClick} onEditProfile={handleEditProfileClick} onAddCard={handleAddPlaceClick} onCardClick={handleCardClick} handleCardLike={handleCardLike} handleDeleteCard={handleDeleteCard} cards={cards}
+              component={Main}
+              loggedIn={loggedIn}
+            />
+
+            <Route path="/sign-in">
+              <Login handleLogin={handleLogin} />
+            </Route>
+
+            <Route path="/sign-up">
+              <Register handleRegistration={handleRegistration} />
+            </Route>
+
+          </Switch>
+
+          {loggedIn && <Footer />}
 
           <Footer />
 
@@ -141,6 +231,8 @@ function App() {
           <ImagePopup onClose={closeAllPopups} card={selectedCard} />
 
           <PopupWithForm name="popup_type_sure" title="Вы уверены?" buttonText="Да" />
+
+          <InfoTooltip isOpen={isInfoTooltipOpen} status={status} onClose={closeAllPopups} />
 
         </div>
 

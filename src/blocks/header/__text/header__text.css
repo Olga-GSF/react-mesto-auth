@@ -1,0 +1,27 @@
+.header__text {
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.1;
+  color: #FFFFFF;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.header__text:hover {
+  opacity: 0.5;
+}
+
+@media screen and (max-width: 639px) {
+  .header__text {
+    font-size: 18px;
+  }
+}
+
+@media screen and (max-width: 424px) {
+  .header__text {
+    max-width: 189px;
+    font-size: 18px;
+    text-align: center;
+  }
+}

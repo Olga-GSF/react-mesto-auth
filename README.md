@@ -16,7 +16,7 @@
 
 ## Ссылка на GitHub
 
-https://olga-gsf.github.io/mesto-react/
+https://github.com/Olga-GSF/react-mesto-auth
 
 ## Контакты
 

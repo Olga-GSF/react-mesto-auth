@@ -1,0 +1,15 @@
+.header__container {
+  display: flex;
+  padding-right: 27px;
+  height: 22px;
+}
+
+@media screen and (max-width: 1073px) {
+  .header__container {
+    display: none;
+  }
+}
+
+.header__container:last-child {
+  padding-right: 0;
+}

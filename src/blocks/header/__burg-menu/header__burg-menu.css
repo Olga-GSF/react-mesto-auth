@@ -1,0 +1,18 @@
+.header__burg-menu {
+  display: none;
+}
+
+@media screen and (max-width: 1073px) {
+  .header__burg-menu {
+    display: inherit;
+    margin: 0;
+    display: flex;
+    margin-right: 35px;
+    margin-bottom: 31px;
+  }
+
+  .header__burg-menu:hover {
+    cursor: pointer;
+    opacity: 0.5;
+  }
+}
