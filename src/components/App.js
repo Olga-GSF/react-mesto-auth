@@ -89,6 +89,27 @@ function App() {
     setInfoTooltipOpen(false)
   }
 
+  useEffect(() => {
+    const closeByEscape = (evt) => {
+      if (evt.key === 'Escape') {
+        closeAllPopups();
+      }
+    }
+    document.addEventListener('keydown', closeByEscape)
+
+    return () => document.removeEventListener('keydown', closeByEscape)
+  }, [])
+
+  useEffect(() => {
+    document.addEventListener('mousedown', (evt) => {
+      const container = document.querySelector('.popup__content')
+      const click = evt.composedPath().includes(container) //composedPath возвращает путь к контейнеру
+      if (!click) {
+        closeAllPopups();
+      }
+    })
+  });
+
   function handleMenuClick() {
     setMenuOpen(!isMenuOpen)
   }
