@@ -101,14 +101,15 @@ function App() {
   }, [])
 
   useEffect(() => {
-    document.addEventListener('mousedown', (evt) => {
-      const container = document.querySelector('.popup__content')
-      const click = evt.composedPath().includes(container) //composedPath возвращает путь к контейнеру
-      if (!click) {
+    const closeOverlay = (evt) => {
+      if (evt.target.classList.contains('popup')) {
         closeAllPopups();
       }
-    })
-  });
+    }
+    document.addEventListener('mousedown', closeOverlay)
+
+    return () => document.removeEventListener('mousedown', closeOverlay)
+  }, [])
 
   function handleMenuClick() {
     setMenuOpen(!isMenuOpen)
