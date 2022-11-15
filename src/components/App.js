@@ -37,13 +37,14 @@ function App() {
   useEffect(() => {
     loggedIn && Promise.all([
       api.getUserData(),
-
       api.getInitialCards(),
     ])
       .then(([data, cards]) => {
+        console.log(data);
+        console.log(cards);
         setCurrentUser(data);
 
-        setCards(cards);
+        setCards(cards.data);
       })
       .catch((err) => {
         console.log(err);
@@ -51,7 +52,7 @@ function App() {
   }, [loggedIn])
 
   useEffect(() => {
-    const jwt = localStorage.getItem('token');
+    const jwt = localStorage.getItem('jwt');
     if (jwt) {
       auth.checkToken(jwt)
         .then((res) => {
@@ -63,7 +64,7 @@ function App() {
           console.log(err);
         })
     }
-  }, [history])
+  }, [])
 
   function handleEditAvatarClick() {
     renewAvatarPopupOpen(true)
@@ -116,13 +117,14 @@ function App() {
   }
 
   function handleCardLike(cards) {
+    console.log(cards);
     // Снова проверяем, есть ли уже лайк на этой карточке
-    const isLiked = cards.likes.some(i => i._id === currentUser._id);
+    const isLiked = cards.likes.some(i => i === currentUser.data._id);
 
     // Отправляем запрос в API и получаем обновлённые данные карточки
     api.changeLikeCardStatus(cards._id, !isLiked)
       .then((newCard) => {
-        setCards((state) => state.map((c) => c._id === cards._id ? newCard : c));
+        setCards((state) => state.map((c) => c._id === cards._id ? newCard.data : c));
       })
       .catch((err) => {
         console.log(err);
@@ -166,7 +168,7 @@ function App() {
   function handleUpdateCard(card) {
     api.createCard(card)
       .then((newCard) => {
-        setCards([newCard, ...cards]);
+        setCards([...cards, newCard.data]);
         closeAllPopups();
       })
       .catch((err) => {
@@ -174,7 +176,6 @@ function App() {
       })
   }
   function handleRegistration(email, password) {
-    console.log(email)
     auth.register(email, password)
       .then((data) => {
         if (data) {
@@ -193,26 +194,43 @@ function App() {
   function handleLogin(email, password) {
     auth.login(email, password)
       .then((data) => {
+        console.log(data);
         if (data.token) {
-          localStorage.setItem('token', data.token)
-          setEmail(email);
+          localStorage.setItem('jwt', data.token);
+          setEmail(email)
           setLoggedIn(true);
           history.push('/');
         }
       })
       .catch((err) => {
-        setInfoTooltipOpen(true);
+        setInfoTooltipOpen(true)//открываем попап InfoTooltip
         console.log(err);
       })
   }
 
+  // function handleLogin(email, password) {
+  //   auth.login(email, password)
+  //     .then((data) => {
+  //       if (data.token) {
+  //         console.log(data.token);
+  //         localStorage.setItem('token', data.token)
+  //         setEmail(email);
+  //         setLoggedIn(true);
+  //         history.push('/');
+  //       }
+  //     })
+  //     .catch((err) => {
+  //       setInfoTooltipOpen(true);
+  //       console.log(err);
+  //     })
+  // }
+
   function handleLogOut() {
-    localStorage.removeItem('token');
+    localStorage.removeItem('jwt');
     setLoggedIn(false);
     history.push('/sign-in');
     setMenuOpen(!isMenuOpen)
   }
-
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="App">
@@ -241,8 +259,6 @@ function App() {
           </Switch>
 
           {loggedIn && <Footer />}
-
-          <Footer />
 
           <EditProfilePopup isOpen={editProfilePopup} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />
 

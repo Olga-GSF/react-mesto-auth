@@ -1,4 +1,4 @@
-const BASE_URL = "https://auth.nomoreparties.co";
+const BASE_URL = "https://olga-mesto.15front.nomoredomains.icu";
 
 function getJsonOrError(res) {
   if (res.ok) {

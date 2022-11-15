@@ -5,6 +5,7 @@
   display: flex;
   justify-content: flex-start;
   flex-shrink: 0;
+  margin: auto;
 }
 
 @media screen and (max-width: 1023px) {

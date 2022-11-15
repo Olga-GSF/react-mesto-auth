@@ -12,12 +12,12 @@ function Main({ onRenewAvatar, onEditProfile, onAddCard, onCardClick, handleCard
         <div className="profile__info">
           <div className="profile__edit-wrapper">
             <button type="button" className="profile__overlay" onClick={onRenewAvatar}></button>
-            <img src={currentUser.avatar} alt="аватар" className="profile__avatar" />
+            <img src={currentUser && currentUser.data ? currentUser.data.avatar : ''} alt="аватар" className="profile__avatar" />
           </div>
           <div className="profile__wrapper">
-            <h1 className="profile__title">{currentUser.name}</h1>
+            <h1 className="profile__title">{currentUser && currentUser.data ? currentUser.data.name : ''}</h1>
             <button aria-label="edit" type="button" className="button profile__button-edit" onClick={onEditProfile}></button>
-            <p className="profile__subtitle">{currentUser.about}</p>
+            <p className="profile__subtitle">{currentUser && currentUser.data ? currentUser.data.about : ''}</p>
           </div>
         </div>
         <button aria-label="add" className="button profile__button-add" onClick={onAddCard}></button>
@@ -26,7 +26,7 @@ function Main({ onRenewAvatar, onEditProfile, onAddCard, onCardClick, handleCard
       <section className="cards center">
         <ul className="cards__items">
           {
-            cards.map((card) => (
+            cards.slice(0).reverse().map((card) => (
               <Card card={card} key={card._id} onCardClick={onCardClick} onCardLike={handleCardLike} onCardDelete={handleDeleteCard} />
             ))
           }

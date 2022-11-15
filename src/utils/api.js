@@ -1,7 +1,7 @@
 class Api {
-  constructor(url, token) {
+  constructor(url) {
     this._url = url;
-    this._token = token;
+    this._token = localStorage.getItem('jwt');
 
     this._getJsonOrError = this._getJsonOrError.bind(this);
     this._getHeaders = this._getHeaders.bind(this);
@@ -14,10 +14,9 @@ class Api {
 
     throw new Error('Ошибка при загрузке данных');
   }
-
   _getHeaders() {
     return {
-      authorization: this._token,
+      authorization: `Bearer ${localStorage.getItem('jwt')}`,
       'Content-Type': 'application/json',
     }
   }
@@ -30,6 +29,7 @@ class Api {
   }
 
   getUserData() {
+    console.log(this._url);
     return fetch(`${this._url}/users/me`, {
       headers: this._getHeaders(),
     })
@@ -37,6 +37,8 @@ class Api {
   }
 
   setUserData(name, about) {
+    console.log(name);
+    console.log(about);
     return fetch(`${this._url}/users/me`, {
       method: 'PATCH',
       headers: this._getHeaders(),
@@ -89,5 +91,5 @@ class Api {
 
 }
 
-const api = new Api('https://mesto.nomoreparties.co/v1/cohort-47', '216df983-7365-4312-a47e-9764ea1d99b1')
+const api = new Api('https://olga-mesto.15front.nomoredomains.icu')
 export default api

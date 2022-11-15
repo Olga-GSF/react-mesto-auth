@@ -2,8 +2,8 @@ import { useState } from "react";
 import { withRouter } from "react-router-dom";
 
 function Login(props) {
-  const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   function handlePasswordChange(evt) {
     setPassword(evt.target.value);
